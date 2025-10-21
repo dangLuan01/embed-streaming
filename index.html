@@ -24,15 +24,18 @@
     #video-box {
       position: relative;
       width: 100%;
-      height: 100vh; /* full viewport */
+      height: 100vh;
       background: black;
     }
-
-    #video-box video {
-      width: 100%;
+    .plyr {
       height: 100%;
-      object-fit: contain;
-      display: block;
+    }
+    .plyr__video-wrapper {
+      height: 100%;
+    }
+    .plyr__video-wrapper video {
+      height: 100%;
+      object-fit: cover;
     }
   </style>
 </head>
