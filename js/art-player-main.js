@@ -18,7 +18,11 @@ document.addEventListener("DOMContentLoaded", (event) => {
         fullscreenWeb: false,
         miniProgressBar: true,
         autoOrientation: true,
+        subtitleOffset: true,
         airplay: false,
+        moreVideoAttr: {
+            crossOrigin: 'anonymous',
+        },
         whitelist: ['*'],
         customType: {
             m3u8: function (video, url) {
