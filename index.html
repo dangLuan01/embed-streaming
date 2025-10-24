@@ -11,14 +11,12 @@
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <script src="https://cdn.jsdelivr.net/npm/artplayer/dist/artplayer.js"></script>
     <script>
-        function getQuery(name) {
-            name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
-            var regex = new RegExp('[\\?&]' + name + '=([^&]*)');
-            var results = regex.exec(location.search);
-            return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+       function getUuidFromHash() {
+            return location.hash.substring(1); 
         }
-        const url = getQuery('link');
-        const resumeKey = url.split('/').slice(-2).shift() + ":progress";
+        var uuid = getUuidFromHash();
+        const url = 'https://streamingapi.xoailac.top/streaming/playlist/'+ uuid + '/master.m3u8';
+        const resumeKey = uuid + ":progress";
     </script>
 </head>
 <body>
