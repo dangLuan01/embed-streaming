@@ -28,11 +28,37 @@ document.addEventListener("DOMContentLoaded", (event) => {
             m3u8: function (video, url) {
                 if (Hls.isSupported()) {
                     if (window.player.hls) window.player.hls.destroy();
-                    const hls = new Hls();
+                    const hls = new Hls({
+                        enableWorker: true,
+                        lowLatencyMode: true,
+                        backBufferLength: 10,
+                        maxBufferLength: 15,
+                        maxMaxBufferLength: 30,
+                        startPosition: -1,
+                        liveSyncDuration: 3,
+                        fragLoadingTimeOut: 20000,
+                        fragLoadingMaxRetry: 3,
+                        fragLoadingRetryDelay: 500,
+                    });
+
                     hls.loadSource(url);
                     hls.attachMedia(video);
                     window.player.hls = hls;
                     window.player.on('destroy', () => hls.destroy());
+
+                    let lastSeekTime = 0;
+                    window.player.on('seek', (time) => {
+                        const diff = Math.abs(time - window.player.currentTime);
+                        if (diff > 2) {
+                            hls.stopLoad();
+                            hls.startLoad(time);
+                            lastSeekTime = time;
+                        }
+                    });
+
+                hls.on(Hls.Events.BUFFER_STALLED_ERROR, () => {
+                    hls.startLoad(window.player.currentTime);
+                });
                 } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
                     video.src = url;
                 } else {
