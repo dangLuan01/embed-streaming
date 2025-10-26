@@ -29,16 +29,17 @@ document.addEventListener("DOMContentLoaded", (event) => {
                 if (Hls.isSupported()) {
                     if (window.player.hls) window.player.hls.destroy();
                     const hls = new Hls({
-                        enableWorker: true,
-                        lowLatencyMode: true,
-                        backBufferLength: 10,
-                        maxBufferLength: 15,
-                        maxMaxBufferLength: 30,
-                        startPosition: -1,
-                        liveSyncDuration: 3,
-                        fragLoadingTimeOut: 20000,
-                        fragLoadingMaxRetry: 3,
-                        fragLoadingRetryDelay: 500,
+                       
+                        lowLatencyMode: false,        
+                        maxBufferLength: 12,          
+                        backBufferLength: 6,          
+                        maxBufferHole: 0.5,           
+                        maxFragLookUpTolerance: 0.2,  
+                        fragLoadingMaxRetry: 3,       
+                        fragLoadingTimeOut: 8000,     
+                        enableWorker: true,          
+                        startPosition: -1,           
+                        autoStartLoad: true,         
                     });
 
                     hls.loadSource(url);
@@ -48,17 +49,16 @@ document.addEventListener("DOMContentLoaded", (event) => {
 
                     let lastSeekTime = 0;
                     window.player.on('seek', (time) => {
-                        const diff = Math.abs(time - window.player.currentTime);
-                        if (diff > 2) {
+                        const diff = Math.abs(time - lastSeekTime);
+                        if (diff > 1) {
                             hls.stopLoad();
                             hls.startLoad(time);
                             lastSeekTime = time;
                         }
                     });
-
-                hls.on(Hls.Events.BUFFER_STALLED_ERROR, () => {
-                    hls.startLoad(window.player.currentTime);
-                });
+                    hls.on(Hls.Events.BUFFER_STALLED_ERROR, () => {
+                        hls.startLoad(window.player.currentTime);
+                    });
                 } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
                     video.src = url;
                 } else {
@@ -84,7 +84,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
         </svg>`,
         tooltip: 'Forward 10 second',
         click: function () {
-            window.player.seek = Math.max(window.player.currentTime - 10, 0);
+            window.player.seek = Math.max(window.player.currentTime - 5, 0);
         },
     });
 
@@ -104,7 +104,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
         </svg>`,
         tooltip: 'Seek 10 second',
         click: function () {
-            window.player.seek = Math.min(window.player.currentTime + 10, window.player.duration);
+            window.player.seek = Math.min(window.player.currentTime + 5, window.player.duration);
         },
     });
 
