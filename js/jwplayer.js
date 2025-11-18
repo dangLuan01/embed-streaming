@@ -10,7 +10,7 @@ function getUuidFromHash() {
 var results = [];
 
 function getData() {
-    const url = "https//streamingapi.xoailac.top/streaming/subtitles/" + getUuidFromHash();
+    const url = "https://streamingapi.xoailac.top/streaming/subtitles/" + getUuidFromHash();
     
     return fetch(url)
         .then(response => response.json())
