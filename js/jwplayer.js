@@ -7,7 +7,33 @@ function getUuidFromHash() {
     return location.hash.substring(1); 
 }
 
-var link = 'https://streamingapi.xoailac.top/streaming/mainfest/' + getUuidFromHash() + '/master.m3u8';
+var results = [];
+
+function getData() {
+    const url = "https://streamingapi.xoailac.top/streaming/subtitles/" + getUuidFromHash();
+    
+    return fetch(url)
+        .then(response => response.json())
+        .then(result => {
+            results = result.data[0];
+        })
+        .catch(err => console.error(err));
+}
+
+function toTracks() {
+    if (!results) {
+        return
+    }
+    
+    return results.map(item => ({
+        file: "https://streamingapi.xoailac.top/streaming/subtitles/"
+              + item.video_uuid + "/" + item.uuid,
+        label: item.languages,
+        kind: "captions"
+    }));
+}
+
+var link = 'https://streamingapi.xoailac.top/streaming/playlist/' + getUuidFromHash() + '/master.m3u8';
 var playerInstance = jwplayer('jwplayer');
 function setupVideo() {
     playerInstance.setup({
@@ -21,6 +47,7 @@ function setupVideo() {
                         file: link,
                     },
                 ],
+                tracks: toTracks()
             }
         ],
         // logo: {
@@ -156,4 +183,8 @@ this.setUpVideoEvent = function () {
         }
     })
 }
-setupVideo();
+//setupVideo();
+
+getData().then(() => {
+    setupVideo();
+})
