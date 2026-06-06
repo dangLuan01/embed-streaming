@@ -10,7 +10,7 @@ function getUuidFromHash() {
 var results = [];
 
 function getData() {
-    const url = "https://streamingapi.xoailac.top/streaming/subtitles/" + getUuidFromHash();
+    const url = "https://store-api.toeicviet.com/streaming/subtitles/" + getUuidFromHash();
     
     return fetch(url)
         .then(response => response.json())
@@ -26,14 +26,14 @@ function toTracks() {
     }
     
     return results.map(item => ({
-        file: "https://streamingapi.xoailac.top/streaming/subtitles/"
+        file: "https://store-api.toeicviet.com/streaming/subtitles/"
               + item.video_uuid + "/" + item.uuid,
         label: item.languages,
         kind: "captions"
     }));
 }
 
-var link = 'https://streamingapi.xoailac.top/streaming/playlist/' + getUuidFromHash() + '/master.m3u8';
+var link = 'https://store-api.toeicviet.com/streaming/playlist/' + getUuidFromHash() + '/master.m3u8';
 var playerInstance = jwplayer('jwplayer');
 function setupVideo() {
     playerInstance.setup({
